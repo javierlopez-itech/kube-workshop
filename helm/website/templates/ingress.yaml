@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{.Release.Name}}-ingress
+spec:
+  rules:
+    - host: {{ required "You have to provide a host for the website" .Values.Ingress.Host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{.Release.Name}}-svc
+                port:
+                  number: {{ .Values.Service.Port }}

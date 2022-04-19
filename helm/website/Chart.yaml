@@ -1,0 +1,6 @@
+apiVersion: v2
+name: website
+description: A website
+appVersion: "1.14"
+version: 0.0.7
+type: application

@@ -1,0 +1,3 @@
+Your website is now deployed! 
+
+You can visit it at http://{{ .Values.Ingress.Host }}

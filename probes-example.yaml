@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-lb
+spec:
+  type: NodePort
+  selector:
+    app: apache
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      initContainers:
+      - name: initializer
+        image: alpine
+        command: ['sh', '-c', 'echo "<?php echo \"Hello World\n\";" > /var/www/html/index.php']
+        volumeMounts:
+        - name: webdir
+          mountPath: "/var/www/html" 
+      containers:
+      - name: apache
+        image: php:apache-buster
+        env:
+        - name: APACHE_LYNX
+          value: curl
+        livenessProbe:
+          exec:
+            command:
+              - apachectl
+              - status
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: webdir
+          mountPath: "/var/www/html"
+      volumes:
+        - name: webdir
+          emptyDir: {}
+       
