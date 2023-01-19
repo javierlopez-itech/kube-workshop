@@ -1,7 +1,0 @@
-ReplicaCount: 2
-
-Service:
-  Port: 80
-
-Ingress:
-  Host:

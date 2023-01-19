@@ -1,0 +1,15 @@
+#service-nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: podinfo-svc-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: podinfo
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 9898
+      # nodePort Range: 30000-32768
+      nodePort: 32100 

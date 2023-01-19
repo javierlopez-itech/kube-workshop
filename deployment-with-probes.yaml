@@ -1,0 +1,35 @@
+#deployment-with-probes.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: podinfo
+  template:
+    metadata:
+      labels:
+        app: podinfo
+    spec:
+      containers:
+      - name: podinfo
+        image: stefanprodan/podinfo:6.1.4
+        command:
+        - ./podinfo
+        - --level=debug
+        - --port=9898
+        ports:
+        - containerPort: 9898
+        livenessProbe:
+           exec:
+             command: ["podcli", "check", "http", "localhost:9898/healthz"]
+           initialDelaySeconds: 5
+           timeoutSeconds: 5
+        readinessProbe:
+           httpGet:
+             path: "/readyz"
+             port: 9898
+           initialDelaySeconds: 5
+           timeoutSeconds: 5

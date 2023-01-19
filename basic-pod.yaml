@@ -1,0 +1,14 @@
+#basic-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podinfo
+  namespace: default
+  labels:
+    app: my-app
+spec:
+  containers:
+  - name: podinfo
+    image: stefanprodan/podinfo:6.1.4
+    ports:
+    - containerPort: 9898
